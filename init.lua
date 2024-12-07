@@ -91,7 +91,10 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
+
+-- Disable codeium default <Tab> keymap
+vim.g.codeium_no_map_tab = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -189,6 +192,56 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+-- My mappings
+--
+-- Save
+vim.keymap.set('n', '<C-s>', ':w<cr>', { desc = 'Save' })
+
+-- Change Ctrl-C to have Esc funcitonality
+-- lvim.keys.insert_mode["<C-c>"] = "<Esc>"
+vim.keymap.set('i', '<C-c>', '<Esc>', { desc = 'Change <C-c> to have Esc funcitonality' })
+
+-- Keep cursor in middle when scrolling
+vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'Keep cursor in middle when scrolling' })
+vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Keep cursor in middle when scrolling' })
+
+-- Keep cursor in middle when using next and previous
+vim.keymap.set('n', 'n', 'nzzzv', { desc = 'Keep cursor in middle when using next and previous' })
+vim.keymap.set('n', 'N', 'Nzzzv', { desc = 'Keep cursor in middle when using next and previous' })
+
+-- Paste without losing what was pasted
+vim.keymap.set('v', '<leader>p', '"_dP', { desc = 'Paste without losing what was pasted' })
+
+-- Search and replace word under cursor
+vim.keymap.set('n', '<leader>ss', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = 'Search and replace word under cursor' })
+
+-- Bufferline next and previous
+vim.keymap.set('n', '<S-l>', ':BufferLineCycleNext<CR>', { desc = 'Bufferline next' })
+vim.keymap.set('n', '<S-h>', ':BufferLineCyclePrev<CR>', { desc = 'Bufferline previous' })
+
+-- Clear last search
+vim.keymap.set('n', '<leader>h', ':nohlsearch<CR>', { desc = 'Clear last search' })
+
+-- Neotree mappings
+vim.keymap.set('n', '<leader>e', ':Neotree toggle<CR>', { desc = 'Toggle Neotree' })
+
+-- Move lines up or down
+vim.keymap.set('i', '<A-j>', '<Esc>:m .+1<CR>==gi', { desc = 'Move lines up' })
+vim.keymap.set('i', '<A-k>', '<Esc>:m .-2<CR>==gi', { desc = 'Move lines down' })
+vim.keymap.set('n', '<A-j>', ':m .+1<CR>==', { desc = 'Move lines up' })
+vim.keymap.set('n', '<A-k>', ':m .-2<CR>==', { desc = 'Move lines down' })
+vim.keymap.set('v', '<A-j>', ":m '>+1<CR>gv-gv", { desc = 'Move lines up' })
+vim.keymap.set('v', '<A-k>', ":m '<-2<CR>gv-gv", { desc = 'Move lines down' })
+
+-- Open diagnostics
+vim.keymap.set('n', 'gl', ':lua vim.diagnostic.open_float()<CR>', { desc = 'Open diagnostics' })
+
+-- Enter diagnostics
+vim.keymap.set('n', 'glgl', ':lua vim.diagnostic.goto_prev()<CR>', { desc = 'Enter diagnostics' })
+
+-- Open Alpha
+vim.keymap.set('n', '<leader>;', ':Alpha<CR>', { desc = 'Open Alpha' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -413,7 +466,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
       -- Slightly advanced example of overriding default behavior and theme
-      vim.keymap.set('n', '<leader>/', function()
+      vim.keymap.set('n', "<leader>'", function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
         builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
           winblend = 10,
@@ -785,7 +838,7 @@ require('lazy').setup({
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ['<C-y>'] = cmp.mapping.confirm { select = true },
+          ['<enter>'] = cmp.mapping.confirm { select = true },
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
@@ -845,7 +898,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'tokyonight-storm'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
@@ -929,16 +982,16 @@ require('lazy').setup({
   --
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
@@ -965,6 +1018,16 @@ require('lazy').setup({
     },
   },
 })
+
+-- Neo-tree config
+require('neo-tree').setup {
+  window = {
+    mappings = {
+      ['l'] = 'open',
+      ['h'] = 'close_node',
+    },
+  },
+}
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
