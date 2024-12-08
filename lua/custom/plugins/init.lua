@@ -85,7 +85,7 @@ return {
       dashboard.section.buttons.val = {
         dashboard.button('f', '󰮗   Find File', ':Telescope find_files<CR>'),
         dashboard.button('n', '   New File', ':ene!<CR>'),
-        dashboard.button('p', '   Projects', ':Telescope projects<CR>'),
+        dashboard.button('p', '   Projects', ':Telescope repo<CR>'),
         dashboard.button('r', '   Recent Files', ':Telescope oldfiles<CR>'),
         dashboard.button('t', '󱘞   Find Text', ':Telescope live_grep<CR>'),
         dashboard.button('c', '   Configuration', ':e ~/.config/nvim/init.lua<CR>'),
@@ -125,6 +125,7 @@ return {
     'wellle/targets.vim',
   },
 
+  -- Lazygit
   {
     'kdheepak/lazygit.nvim',
     lazy = true,
@@ -145,4 +146,8 @@ return {
       { '<leader>lg', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
     },
   },
+
+  { 'cljoly/telescope-repo.nvim', lazy = true, dependencies = {
+    'nvim-lua/plenary.nvim',
+  } },
 }
