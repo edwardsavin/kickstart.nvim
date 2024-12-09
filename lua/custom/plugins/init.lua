@@ -89,6 +89,7 @@ return {
         dashboard.button('r', '   Recent Files', ':Telescope oldfiles<CR>'),
         dashboard.button('t', '󱘞   Find Text', ':Telescope live_grep<CR>'),
         dashboard.button('c', '   Configuration', ':e ~/.config/nvim/init.lua<CR>'),
+        dashboard.button('x', '󰚥   Plugins', ':e ~/.config/nvim/lua/custom/plugins/init.lua<CR>'),
         dashboard.button('q', '󰗼   Quit', ':qa<CR>'),
       }
 
@@ -143,11 +144,31 @@ return {
     -- setting the keybinding for LazyGit with 'keys' is recommended in
     -- order to load the plugin when the command is run for the first time
     keys = {
-      { '<leader>lg', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
+      { '<leader>gg', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
     },
   },
 
+  -- Telescope-repo
   { 'cljoly/telescope-repo.nvim', lazy = true, dependencies = {
     'nvim-lua/plenary.nvim',
   } },
+
+  -- LSP Signature
+  {
+    'ray-x/lsp_signature.nvim',
+    config = function()
+      require('lsp_signature').setup {
+        -- …
+      }
+    end,
+  },
+
+  -- Render Markdown
+  {
+    'MeanderingProgrammer/render-markdown.nvim',
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+    opts = {},
+  },
 }
